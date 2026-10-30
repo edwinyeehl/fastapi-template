@@ -7,6 +7,13 @@ Models like Gemini Argon, GPT-6, and Claude 4.5+ have full autonomous reasoning 
 
 All your behavior, responses, and planning in this workspace MUST follow the rules below natively.
 
+### Domain-Specific Sub-Instructions
+In addition to these root instructions, always read and apply the specialized instructions matching the scope you are editing:
+- When working on API routes: refer to [`.github/instructions/fastapi.instructions.md`](./instructions/fastapi.instructions.md)
+- When writing or running tests: refer to [`.github/instructions/tdd.instructions.md`](./instructions/tdd.instructions.md)
+- When touching models, auth, or input parsing: refer to [`.github/instructions/security.instructions.md`](./instructions/security.instructions.md)
+- When developing agents or state graphs: refer to [`.github/instructions/langgraph.instructions.md`](./instructions/langgraph.instructions.md)
+
 ---
 
 ## 1. The Autonomous 5-Step Agentic Discipline
