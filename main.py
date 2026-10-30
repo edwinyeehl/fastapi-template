@@ -1,22 +1,43 @@
 import uuid
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+from app.core.logging import get_logger, setup_logging
 from app.schemas.envelope import ProblemDetails, ResponseEnvelope, ResponseMeta
+
+logger = get_logger("app.main")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    setup_logging()
+    logger.info(
+        "Application starting up with structured logging", environment="configured"
+    )
+    yield
+    logger.info("Application shutting down")
+
 
 app = FastAPI(
     title="FastAPI Agentic Backend",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 
 @app.middleware("http")
 async def request_id_middleware(request: Request, call_next):
-    """Attach or propagate X-Request-ID across the request lifecycle."""
+    """Attach or propagate X-Request-ID and inject it into structured log context."""
     request_id = request.headers.get("x-request-id", str(uuid.uuid4()))
     request.state.request_id = request_id
+
+    import structlog
+
+    structlog.contextvars.bind_contextvars(request_id=request_id)
+
     response = await call_next(request)
     response.headers["x-request-id"] = request_id
     return response

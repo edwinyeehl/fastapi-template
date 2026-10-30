@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "fastapi_db"
 
+    # Langfuse Observability Configuration
+    LANGFUSE_PUBLIC_KEY: str | None = None
+    LANGFUSE_SECRET_KEY: str | None = None
+    LANGFUSE_BASE_URL: str = "https://cloud.langfuse.com"
+    LANGFUSE_ENABLED: bool = False
+
     @property
     def async_database_url(self) -> str:
         return (

@@ -12,6 +12,8 @@ Modern, test-driven, agent-ready **FastAPI** backend template configured with **
 - **ORM & Migrations:** SQLAlchemy 2.0 (asyncio + `asyncpg`) + Alembic async runner.
 - **Standardized API Envelopes:** JSend-style `ResponseEnvelope` for successful payloads and RFC 9457 `ProblemDetails` (`application/problem+json`) for errors.
 - **Testing & Quality:** Pytest (`pytest-asyncio`, `httpx` ASGI transport), Ruff (linter & formatter).
+- **Git Hooks:** `pre-commit` and `pre-push` hooks running unit tests and linters automatically to block invalid commits/pushes.
+- **Observability & Logging:** Structured JSON logging (`structlog`) with request IDs, plus integrated **Langfuse** tracing callback support for LangGraph workflows.
 - **Agentic Infrastructure:** LangGraph ready with persistent thread checkpointing and vector store schema.
 - **VS Code Copilot Engine:** Hierarchical agent instructions (`.github/copilot-instructions.md`), path-specific rules (`.github/instructions/`), and universal cross-agent rules (`AGENTS.md`).
 
@@ -101,8 +103,10 @@ fastapi-template/
 │   └── env.py                       # Async Alembic runner
 ├── app/
 │   ├── core/
-│   │   ├── config.py                # Pydantic v2 settings
-│   │   └── database.py              # Async SQLAlchemy engine & session
+│   │   ├── config.py                # Pydantic v2 settings & Langfuse config
+│   │   ├── database.py              # Async SQLAlchemy engine & session
+│   │   ├── logging.py               # Structured JSON logging (structlog)
+│   │   └── observability.py         # Langfuse callback generator
 │   ├── api/                         # RESTful API routers
 │   ├── models/                      # SQLAlchemy & pgvector ORM entities
 │   ├── schemas/
@@ -110,6 +114,7 @@ fastapi-template/
 │   └── services/                    # Domain logic & LangGraph agent workflows
 ├── tests/
 │   └── test_main.py                 # Async integration test with envelope assertion
+├── .pre-commit-config.yaml          # Pre-commit & pre-push hooks (ruff + pytest)
 ├── pyproject.toml                   # Project dependencies & tool configs
 └── main.py                          # FastAPI application entrypoint with middleware
 ```
