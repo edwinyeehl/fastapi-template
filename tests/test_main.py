@@ -15,4 +15,8 @@ async def test_read_root():
 
     # Assert
     assert response.status_code == 200
-    assert response.json() == {"message": "Hello World"}
+    payload = response.json()
+    assert payload["success"] is True
+    assert payload["data"] == {"message": "Hello World"}
+    assert "x-request-id" in response.headers
+    assert payload["meta"]["request_id"] == response.headers["x-request-id"]

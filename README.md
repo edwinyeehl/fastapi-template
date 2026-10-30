@@ -8,33 +8,30 @@ Modern, test-driven, agent-ready **FastAPI** backend template configured with **
 
 - **Runtime & Framework:** Python 3.11+, FastAPI (Pydantic v2, `Annotated` dependency injection).
 - **Package Manager:** [`uv`](https://github.com/astral-sh/uv) (blazing-fast resolution & environments).
-- **Database & Vectors:** PostgreSQL 17 with `pgvector` extension via Docker Compose.
+- **Database & Vectors:** PostgreSQL 17 with `pgvector` extension.
 - **ORM & Migrations:** SQLAlchemy 2.0 (asyncio + `asyncpg`) + Alembic async runner.
+- **Standardized API Envelopes:** JSend-style `ResponseEnvelope` for successful payloads and RFC 9457 `ProblemDetails` (`application/problem+json`) for errors.
 - **Testing & Quality:** Pytest (`pytest-asyncio`, `httpx` ASGI transport), Ruff (linter & formatter).
 - **Agentic Infrastructure:** LangGraph ready with persistent thread checkpointing and vector store schema.
-- **VS Code Copilot Engine:** Hierarchical agent instructions (`.github/copilot-instructions.md`), path-specific rules (`.github/instructions/`), and reusable commands (`.github/prompts/`).
+- **VS Code Copilot Engine:** Hierarchical agent instructions (`.github/copilot-instructions.md`), path-specific rules (`.github/instructions/`), and universal cross-agent rules (`AGENTS.md`).
 
 ---
 
 ## 🚀 Quick Start
 
 ### 1. Prerequisites
-Ensure you have `uv` and Docker installed:
+Ensure you have `uv` installed and a PostgreSQL instance running with `pgvector`:
 ```bash
 brew install uv
 # or curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### 2. Environment & Database
-Start PostgreSQL with `pgvector`:
-```bash
-docker compose up -d postgres
-```
-
+### 2. Environment Configuration
 Copy the environment file:
 ```bash
 cp .env.example .env
 ```
+Update your `POSTGRES_*` credentials in `.env` to point to your PostgreSQL instance.
 
 ### 3. Database Migrations
 Run Alembic async migrations to provision `pgvector` and initial tables:
@@ -87,21 +84,17 @@ This repository enforces a strict **5-Step Agentic Discipline** for developers a
 fastapi-template/
 ├── .github/
 │   ├── copilot-instructions.md      # Always-on master workflow rules
-│   ├── instructions/                # Path-specific rules (applyTo)
-│   │   ├── fastapi.instructions.md  # FastAPI & Annotated standards
-│   │   ├── tdd.instructions.md      # Pytest & AAA pattern
-│   │   ├── security.instructions.md # OWASP API Top 10 & SOLID
-│   │   └── langgraph.instructions.md# LangGraph state & checkpointing
-│   └── prompts/                     # Reusable Copilot commands
-│       ├── grill.prompt.md          # /grill
-│       ├── tdd.prompt.md            # /tdd
-│       ├── refactor.prompt.md       # /refactor
-│       └── handoff.prompt.md        # /handoff
+│   └── instructions/                # Path-specific rules (applyTo)
+│       ├── fastapi.instructions.md  # FastAPI & Annotated standards
+│       ├── tdd.instructions.md      # Pytest & AAA pattern
+│       ├── security.instructions.md # OWASP API Top 10 & SOLID
+│       └── langgraph.instructions.md# LangGraph state & checkpointing
 ├── .agents/skills/                  # Universal agent skills (Codex, Claude, Hermes)
 │   ├── grilling/SKILL.md
 │   ├── tdd/SKILL.md
 │   ├── fastapi/SKILL.md
 │   └── handoff/SKILL.md
+├── AGENTS.md                        # Universal root spec for modern IDE agents
 ├── alembic/                         # Database migrations
 │   ├── versions/
 │   │   └── 0001_initial_pgvector.py # pgvector extension & base schema
@@ -112,11 +105,11 @@ fastapi-template/
 │   │   └── database.py              # Async SQLAlchemy engine & session
 │   ├── api/                         # RESTful API routers
 │   ├── models/                      # SQLAlchemy & pgvector ORM entities
-│   ├── schemas/                     # Strict Pydantic input/output schemas
+│   ├── schemas/
+│   │   └── envelope.py              # ResponseEnvelope & RFC 9457 ProblemDetails
 │   └── services/                    # Domain logic & LangGraph agent workflows
 ├── tests/
-│   └── test_main.py                 # Async integration test sample
-├── docker-compose.yml               # PostgreSQL 17 + pgvector service
+│   └── test_main.py                 # Async integration test with envelope assertion
 ├── pyproject.toml                   # Project dependencies & tool configs
-└── main.py                          # FastAPI application entrypoint
+└── main.py                          # FastAPI application entrypoint with middleware
 ```
