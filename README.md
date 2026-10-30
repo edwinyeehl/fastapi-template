@@ -15,7 +15,7 @@ Modern, test-driven, agent-ready **FastAPI** backend template configured with **
 - **Git Hooks:** `pre-commit` and `pre-push` hooks running unit tests and linters automatically to block invalid commits/pushes.
 - **Observability & Logging:** Structured JSON logging (`structlog`) with request IDs, plus integrated **Langfuse** tracing callback support for LangGraph workflows.
 - **Agentic Infrastructure:** LangGraph ready with persistent thread checkpointing and vector store schema.
-- **VS Code Copilot Engine:** Hierarchical agent instructions (`.github/copilot-instructions.md`), path-specific rules (`.github/instructions/`), and universal cross-agent rules (`AGENTS.md`).
+- **VS Code Copilot Engine:** Hierarchical instructions (`.github/copilot-instructions.md`) and path-specific rules (`.github/instructions/`).
 
 ---
 
@@ -91,12 +91,6 @@ fastapi-template/
 │       ├── tdd.instructions.md      # Pytest & AAA pattern
 │       ├── security.instructions.md # OWASP API Top 10 & SOLID
 │       └── langgraph.instructions.md# LangGraph state & checkpointing
-├── .agents/skills/                  # Universal agent skills (Codex, Claude, Hermes)
-│   ├── grilling/SKILL.md
-│   ├── tdd/SKILL.md
-│   ├── fastapi/SKILL.md
-│   └── handoff/SKILL.md
-├── AGENTS.md                        # Universal root spec for modern IDE agents
 ├── alembic/                         # Database migrations
 │   ├── versions/
 │   │   └── 0001_initial_pgvector.py # pgvector extension & base schema
