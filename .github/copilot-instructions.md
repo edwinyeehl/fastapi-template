@@ -31,14 +31,19 @@ Whenever the user asks you to build, extend, or refactor a feature, execute thes
     > *"This architectural decision requires alignment. Has this decision already been reviewed and approved in Confluence or the team's official ADR records?"*
   - Do NOT invent or assume unapproved ADRs.
 
-### Phase 2: Vertical-Slice TDD (Red ➔ Green)
+### Phase 2: Vertical-Slice TDD (The Iron Law)
+- **The Iron Law:** `NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST`. If code was written before the test: delete it, start over.
 - **Confirm the Seam:** State the public interface and seam under test before generating test code.
-- **Write the Failing Test First (Red):**
+- **Write the Failing Test First (RED):**
   - Use Pytest and the **Arrange-Act-Assert (AAA)** pattern.
   - Test via `httpx.AsyncClient` with `ASGITransport(app=app)`.
-  - Execute the test (`uv run pytest path/to/test.py -k test_name`) to confirm failure for the expected reason.
-- **Write Minimal Implementation (Green):**
-  - Write only the minimal code needed to pass the current test.
+  - Execute the test (`uv run pytest path/to/test.py -k test_name`) and **MANDATORILY watch it fail** for the expected assertion reason.
+- **Write Minimal Implementation (GREEN):**
+  - Write only the minimal code needed to pass the current test (YAGNI).
+  - Verify it passes, and verify the whole suite (`uv run pytest`) stays green.
+- **No Excuses / No Rationalizations:**
+  - "Too simple to test", "I'll test after", "Already manually tested" are banned rationalizations.
+  - Tests added after the fact prove nothing. Test-first is non-negotiable.
   - Never write code for future unwritten tests.
 - **Strict Anti-Pattern Bans:**
   - **NO Horizontal Slicing:** Never write all tests upfront and then all code. Build tracer-bullet vertical slices.
